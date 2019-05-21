@@ -1,0 +1,23 @@
+
+
+//        if (!connection.isClosed()) {
+//            System.out.println("Good");
+//        }
+//
+//        Statement statement = connection.createStatement();
+            /*
+            statement.execute("insert into pathients (pathientName) values ('Малов3');");
+            statement.executeUpdate("update pathients set pathientName='Malov' where id=1");
+            ResultSet result = statement.executeQuery("select * from pathients");
+
+            //System.out.println(result.getArray(1));
+            statement.addBatch("insert into pathients (pathientName , polic) values ('Малов3' , 555)");
+            statement.addBatch("insert into pathients (pathientName , polic) values ('Малов3' , 444)");
+            statement.executeBatch();
+            */
+
+//        ResultSet result = statement.executeQuery("select * from pathients");
+//        while (result.next()) {
+//            System.out.println(result.getString(2));
+//        }
+//        connection.close();

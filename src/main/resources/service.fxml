@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="488.0" prefWidth="941.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Controller.serviceController">
+   <children>
+      <TableView fx:id="tableServicesView" layoutX="-2.0" layoutY="127.0" prefHeight="355.0" prefWidth="941.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="127.0">
+        <columns>
+            <TableColumn fx:id="idColumnView" minWidth="0.0" prefWidth="61.0" text="Id" />
+            <TableColumn fx:id="dateServiceColumnView" minWidth="0.0" prefWidth="75.0" text="Date" />
+            <TableColumn fx:id="profColumnView" minWidth="0.0" prefWidth="255.0" text="Prof" />
+            <TableColumn fx:id="specColumnView" minWidth="0.0" prefWidth="330.0" text="Specialist" />
+            <TableColumn fx:id="diagnozColumnView" minWidth="0.0" prefWidth="82.0" text="Diagnoz" />
+            <TableColumn fx:id="serviceColumnView" minWidth="0.0" prefWidth="71.0" text="Service" />
+            <TableColumn fx:id="kratnostColumnView" minWidth="0.0" prefWidth="66.0" text="Kratnost" />
+        </columns>
+      </TableView>
+      <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Polis:" />
+      <Text fx:id="polisLabel" layoutX="78.0" layoutY="26.0" strokeType="OUTSIDE" strokeWidth="0.0" text="null" />
+      <Text layoutX="14.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pathient:" />
+      <Text fx:id="pathientLabel" layoutX="78.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="null" />
+      <Button layoutX="794.0" layoutY="18.0" mnemonicParsing="false" onAction="#searchServicesClick" text="Search Services" />
+      <Text layoutX="14.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Birthday:" />
+      <Text fx:id="birthdayLabel" layoutX="78.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="null" />
+      <Text layoutX="361.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Attach:" />
+      <Text fx:id="attachLabel" layoutX="425.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="null" />
+      <Text layoutX="361.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Address:" />
+      <Text fx:id="addressLabel" layoutX="425.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="null" />
+      <Button layoutX="794.0" layoutY="73.0" mnemonicParsing="false" onAction="#exportExcelClick" text="Export Excel" />
+   </children>
+</AnchorPane>
