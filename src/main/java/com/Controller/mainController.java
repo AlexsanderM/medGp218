@@ -126,7 +126,12 @@ public class mainController {
 
         Calendar calendarService;
         Calendar calendarBirthday;
+        Calendar calendarDateNapr;
         SimpleDateFormat formatDate = new SimpleDateFormat("dd.MM.yyyy");
+
+        PreparedStatement preparedStatement = null;
+        DbConnect conn = new DbConnect();
+        ResultSet resultSet = null;
 
         int countSheet = new FileExcelXls(selectedFile.getAbsolutePath()).getSheetCount();
 
@@ -174,9 +179,46 @@ public class mainController {
                 Date dateService = new Date(calendarService.getTimeInMillis());
                 Date dateBirthday = new Date(calendarBirthday.getTimeInMillis());
 
-                PreparedStatement preparedStatement = null;
+                if (numberSheet == 0 && i == 0) {
+                    ArrayList<Integer> idList = new ArrayList();
+                    ArrayList<Date> dateList = new ArrayList();
+                    ArrayList<String> serpolisList = new ArrayList();
+                    ArrayList<String> diagnozList = new ArrayList();
+                    ArrayList<Integer> serviceList = new ArrayList();
 
-                DbConnect conn = new DbConnect();
+                    try {
+                        preparedStatement = conn.getConnection().prepareStatement(Const.SEARCH_IN_SERVICES_NAPR);
+
+                        preparedStatement.setDate(1, dateService);
+
+                        resultSet = preparedStatement.executeQuery();
+
+                        for(int k = 0 ;resultSet.next(); k++) {
+                            int id = resultSet.getInt(Const.SERVICE_NAPR_ID);
+                            Date dateNapr = resultSet.getDate(Const.SERVICE_NAPR_DATE);
+                            String serpolisNapr = resultSet.getString(Const.SERVICE_NAPR_SERPOLIC);
+                            String diagnozNapr = resultSet.getString(Const.SERVICE_NAPR_DIAGNOZ);
+                            int serviceNapr = resultSet.getInt(Const.SERVICE_NAPR_SERVICE);
+
+                            idList.add(id);
+                            dateList.add(dateNapr);
+                            serpolisList.add(serpolisNapr);
+                            diagnozList.add(diagnozNapr);
+                            serviceList.add(serviceNapr);
+                            System.out.println(idList.get(k) + " " + dateList.get(k) + " " + serpolisList.get(k) + " " + diagnozList.get(k) + " " + serviceList.get(k));
+                        }
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } finally {
+                        resultSet.close();
+                        preparedStatement.close();
+                        conn.closeConnection();
+                    }
+                }
+
+                preparedStatement = null;
+                conn = new DbConnect();
 
                 try {
                     preparedStatement = conn.getConnection().prepareStatement(SqlQuery.IMPORTSERVICE.getQuery());
@@ -357,321 +399,107 @@ public class mainController {
         DbConnect conn = new DbConnect();
         ResultSet resultSet = null;
 
-        ArrayList<Integer> idList = new ArrayList();
-        ArrayList<Date> dateList = new ArrayList();
-        ArrayList<String> serpolisList = new ArrayList();
-        ArrayList<String> diagnozList = new ArrayList();
-        ArrayList<Integer> serviceList = new ArrayList();
-
-        try {
-            preparedStatement = conn.getConnection().prepareStatement(Const.SEARCH_ID_IN_SERVICES);
-
-            resultSet = preparedStatement.executeQuery();
-
-            for(int i = 0 ;resultSet.next(); i++) {
-                int id = resultSet.getInt(Const.SERVICE_ID);
-                Date date = resultSet.getDate(Const.SERVICE_DATE);
-                String serpolis = resultSet.getString(Const.SERVICE_SERPOLIC);
-                String diagnoz = resultSet.getString(Const.SERVICE_DIAGNOZ);
-                int service = resultSet.getInt(Const.SERVICE_SERVICE);
-
-                idList.add(id);
-                dateList.add(date);
-                serpolisList.add(serpolis);
-                diagnozList.add(diagnoz);
-                serviceList.add(service);
-                //System.out.println(dateList);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            resultSet.close();
-            preparedStatement.close();
-            conn.closeConnection();
-        }
-
-
-        /*
         Scanner scanner = new Scanner(new File(selectedFile.getAbsolutePath()));
         scanner.next();
 
         for (int m = 0; scanner.hasNext(); m++) {
-            if (m != 42544 && m != 42545 && m != 42543) {
+            String[] row = scanner.next().split(",", 13);
+            String date = row[0];
+            String diagnoz;
+            String serviceString;
+            int service;
+            String service_q;
+            String special_case;
+            String visit_result;
+            String illness_outcome;
+            String codDocter;
+            String codMeds;
+            int idServices = 0;
 
-                String[] row = scanner.next().split(",");
-                String date = row[0];
-                String diagnoz;
-                String serviceString;
-                int service;
-                String service_q;
-                String special_case;
-                String visit_result;
-                String illness_outcome;
-                String codDocter;
-                String codMeds;
-                int idServices = 0;
+            String serPolis = "";
+            String forwardMO = "";
+            String forwardDate = "";
 
-                String serPolis = "";
-                String forwardMO = "";
-                String forwardDate = "";
+            try {
+                diagnoz = row[1];
+            } catch (Exception e) {
+                System.out.println(m);
+                continue;
+            }
+            serviceString = row[2];
+            service = Integer.parseInt(serviceString);
+            service_q = row[3];
+            special_case = row[4];
+            special_case = row[4];
+            visit_result = row[5];
+            illness_outcome = row[6];
+            codDocter = row[7];
+            codMeds = row[8];
 
-                try {
-                    diagnoz = row[1];
-                } catch (Exception e) {
-                    System.out.println(m);
-                    continue;
-                }
-                serviceString = row[2];
-                service = Integer.parseInt(serviceString);
-                service_q = row[3];
-                special_case = row[4];
-                special_case = row[4];
-                visit_result = row[5];
-                illness_outcome = row[6];
-                codDocter = row[7];
-                codMeds = row[8];
+            if (row.length == 9) {
+                System.out.println(row.length + " " + row[0] + " " + row[1] + " " + row[2] + " " + row[3]);
+            } else {
+                forwardMO = row[9];
+                forwardDate = row[10];
+            }
 
-                if (row.length == 9) {
-                    System.out.println(row.length + " " + row[0] + " " + row[1] + " " + row[2] + " " + row[3]);
-                } else {
-                    forwardMO = row[9];
-                    forwardDate = row[10];
-                }
+            if (row.length == 11 || row.length == 9) {
+                System.out.println(row.length + " " + row[0] + " " + row[1] + " " + row[2] + " " + row[3]);
+            } else {
+                System.out.println(row.length + " " + row[0] + " " + row[1] + " " + row[2] + " " + row[3]);
 
-                if (row.length == 11 || row.length == 9) {
-                    System.out.println(row.length + " " + row[0] + " " + row[1] + " " + row[2] + " " + row[3]);
-                } else {
-                    String joinPolis = row[11] + " " + row[12];
-                    serPolis = joinPolis.trim();
-                }
+                String joinPolis = row[11] + " " + row[12];
+                serPolis = joinPolis.trim();
+            }
 
+            calendarService = Calendar.getInstance();
+            calendarService.setTime(formatDate.parse(date));
+            calendarService.add(Calendar.HOUR, 5);
 
-//                System.out.println(row[0]);
-//                diagnoz = "Z01.7";
-//                service = 0;
-//                service_q = "0";
-//                special_case ="0";
-//                special_case = "0";
-//                visit_result = "0";
-//                illness_outcome = "0";
-//                codDocter = "0";
-//                codMeds =  "0";
+            Date dateForward;
 
+            if (forwardDate.equals("")) {
+                dateForward = null;
+            } else {
+                calendarForwardDate = Calendar.getInstance();
+                calendarForwardDate.setTime(formatDate.parse(forwardDate));
+                calendarForwardDate.add(Calendar.HOUR, 5);
 
-                calendarService = Calendar.getInstance();
-                calendarService.setTime(formatDate.parse(date));
-                calendarService.add(Calendar.HOUR, 5);
+                dateForward = new Date(calendarForwardDate.getTimeInMillis());
+            }
 
-                Date dateForward;
-
-                if (forwardDate.equals("")) {
-                    dateForward = null;
-                } else {
-                    calendarForwardDate = Calendar.getInstance();
-                    calendarForwardDate.setTime(formatDate.parse(forwardDate));
-                    calendarForwardDate.add(Calendar.HOUR, 5);
-
-                    dateForward = new Date(calendarForwardDate.getTimeInMillis());
-                }
-
-                Date dateService = new Date(calendarService.getTimeInMillis());
-
-                Set<Integer> setIdServices = new LinkedHashSet();
+            Date dateService = new Date(calendarService.getTimeInMillis());
 
 
-                for (int i = 0; i < dateList.size(); i++) {
-                    Date dateServiceSelect = dateList.get(i);
-                    String diagnozSelect = diagnozList.get(i);
-                    String serPolisSelect = serpolisList.get(i);
-                    int serviseSelect = serviceList.get(i);
+            preparedStatement = null;
+            conn = new DbConnect();
 
-                    int dateServiceDay = dateService.getDate();
-                    int dateServiceSelectDay = dateServiceSelect.getDate();
+            try {
+                preparedStatement = conn.getConnection().prepareStatement(SqlQuery.IMPORTSERVICE_NAPR.getQuery());
 
-                    // System.out.println(aaa.getTime() + " " + dateService.getTime()+" "+ aaa + " " + dateService);
-                    if (dateServiceDay == dateServiceSelectDay && diagnoz.equals(diagnozSelect) && serPolis.equals(serPolisSelect) && service == serviseSelect) {
-                        idServices = idList.get(i);
-                        // System.out.println(idServices+" " + dateService + " " + dateServiceSelect + " " + serPolisSelect);
+                preparedStatement.setDate(1, dateService);
+                preparedStatement.setString(2, diagnoz);
+                preparedStatement.setInt(3, service);
+                preparedStatement.setString(4, service_q);
+                preparedStatement.setString(5, special_case);
+                preparedStatement.setString(6, visit_result);
+                preparedStatement.setString(7, illness_outcome);
+                preparedStatement.setString(8, codDocter);
+                preparedStatement.setString(9, codMeds);
+                preparedStatement.setString(10, forwardMO);
+                preparedStatement.setDate(11, dateForward);
+                preparedStatement.setString(12, serPolis);
+                // preparedStatement.setInt(13, idServices);
 
-                        if (setIdServices.add(idServices))
-                            break;
+                preparedStatement.executeUpdate();
 
-                    } else {
-                        idServices = 0;
-                    }
-                }
-
-                preparedStatement = null;
-                conn = new DbConnect();
-
-                try {
-                    preparedStatement = conn.getConnection().prepareStatement(SqlQuery.IMPORTSERVICE_NAPR.getQuery());
-
-                    preparedStatement.setDate(1, dateService);
-                    preparedStatement.setString(2, diagnoz);
-                    preparedStatement.setInt(3, service);
-                    preparedStatement.setString(4, service_q);
-                    preparedStatement.setString(5, special_case);
-                    preparedStatement.setString(6, visit_result);
-                    preparedStatement.setString(7, illness_outcome);
-                    preparedStatement.setString(8, codDocter);
-                    preparedStatement.setString(9, codMeds);
-                    preparedStatement.setString(10, forwardMO);
-                    preparedStatement.setDate(11, dateForward);
-                    preparedStatement.setString(12, serPolis);
-                    preparedStatement.setInt(13, idServices);
-
-
-                    preparedStatement.executeUpdate();
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } finally {
-                    conn.closeConnection();
-                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                conn.closeConnection();
             }
         }
-
-
-
         scanner.close();
-
-         */
-
-
-
-
-        int countSheet =8;//new FileExcelXls(selectedFile.getAbsolutePath()).getSheetCount();
-
-        for (int numberSheet = 0; numberSheet < countSheet; numberSheet++) {
-            FileEx file = new FileExcelXls(selectedFile.getAbsolutePath());
-            ExcelRead excelRead = new ExcelRead(file);
-
-            ObservableList<ExcelRead> list = FXCollections.observableArrayList();
-            TableView<ExcelRead> table = excelRead.getTableAllNapr(list, numberSheet);
-
-            for (int i = 0; i < table.getItems().size(); i++) {
-                String date = table.getItems().get(i).getData();
-                String diagnoz = table.getItems().get(i).getDiagnoz();
-                String serviceString = table.getItems().get(i).getService();
-                int service = Integer.parseInt(serviceString);
-                String service_q = table.getItems().get(i).getService_q();
-                String special_case = table.getItems().get(i).getSpecial_case();
-                String visit_result = table.getItems().get(i).getVisit_result();
-                String illness_outcome = table.getItems().get(i).getIllness_outcome();
-                String codDocter = table.getItems().get(i).getCodDocter();
-                String codMeds = table.getItems().get(i).getCodMeds();
-
-
-                String forwardMO = table.getItems().get(i).getForwardMO();
-                String forwardDate = "01.01.2000";
-
-                String serNumberPolis = table.getItems().get(i).getSerNumberPolis();
-                String numberPolis = table.getItems().get(i).getNumberPolis();
-
-                String serPolis = serNumberPolis + " " + numberPolis;
-                int idServices = 0;
-
-
-
-
-
-//                String mo = "филиал 5";//table.getItems().get(i).getMo(); // ГП 218   филиал 5
-//                String address = table.getItems().get(i).getAddress();
-//                String attach = table.getItems().get(i).getAttach();
-//                String dataBirday = table.getItems().get(i).getDataBirday();
-//                String itemPolis = table.getItems().get(i).getMedPolis();
-//                String sex = table.getItems().get(i).getSex();
-//                String fioPathient = table.getItems().get(i).getFioPathient();
-//                String codDocter = table.getItems().get(i).getCodDocter();
-//                String depDocter = table.getItems().get(i).getDepDocter();
-//                String fioDocter = table.getItems().get(i).getFioDocter();
-//                String codMeds = table.getItems().get(i).getCodMeds();
-//                String depMeds = table.getItems().get(i).getDepMeds();
-//                String fioMeds = table.getItems().get(i).getFioMeds();
-//                String profDoctor = table.getItems().get(i).getProfDoctor();
-//                String profMeds = table.getItems().get(i).getProfMeds();
-//                Double sum = Double.parseDouble(table.getItems().get(i).getSum());
-//                String kratnost = table.getItems().get(i).getKratnost();
-//                int service = Integer.parseInt(table.getItems().get(i).getService());
-//                int oc_sl = Integer.parseInt(table.getItems().get(i).getOc_sl());
-//                String delet = table.getItems().get(i).getDelet();
-//                String diagnoz = table.getItems().get(i).getDiagnoz();
-//                String source = table.getItems().get(i).getSource();
-//                String obrash = table.getItems().get(i).getObrash();
-//                String zabolev = table.getItems().get(i).getZabolev();
-
-                calendarService = Calendar.getInstance();
-                calendarService.setTime(formatDate.parse(date));
-                calendarService.add(Calendar.HOUR, 5);
-
-                    calendarForwardDate = Calendar.getInstance();
-                    calendarForwardDate.setTime(formatDate.parse(forwardDate));
-                    calendarForwardDate.add(Calendar.HOUR, 5);
-
-                Date dateService = new Date(calendarService.getTimeInMillis());
-                Date dateForward = new Date(calendarForwardDate.getTimeInMillis());
-
-
-                Set<Integer> setIdServices = new LinkedHashSet();
-
-                for (int y = 0; y < dateList.size(); y++) {
-                    Date dateServiceSelect = dateList.get(y);
-                    String diagnozSelect = diagnozList.get(y);
-                    String serPolisSelect = serpolisList.get(y);
-                    int serviseSelect = serviceList.get(y);
-
-                    int dateServiceDay = dateService.getDate();
-                    int dateServiceSelectDay = dateServiceSelect.getDate();
-
-                    // System.out.println(aaa.getTime() + " " + dateService.getTime()+" "+ aaa + " " + dateService);
-                    if (dateServiceDay == dateServiceSelectDay && diagnoz.equals(diagnozSelect) && serPolis.equals(serPolisSelect) && service == serviseSelect) {
-                        idServices = idList.get(i);
-                        // System.out.println(idServices+" " + dateService + " " + dateServiceSelect + " " + serPolisSelect);
-
-                        if (setIdServices.add(idServices))
-                            break;
-
-                    } else {
-                        idServices = 0;
-                    }
-                }
-
-                preparedStatement = null;
-                conn = new DbConnect();
-
-                try {
-                   // preparedStatement = conn.getConnection().prepareStatement(SqlQuery.IMPORTSERVICE.getQuery());
-
-                    preparedStatement = conn.getConnection().prepareStatement(SqlQuery.IMPORTSERVICE_NAPR.getQuery());
-
-                    preparedStatement.setDate(1, dateService);
-                    preparedStatement.setString(2, diagnoz);
-                    preparedStatement.setInt(3, service);
-                    preparedStatement.setString(4, service_q);
-                    preparedStatement.setString(5, special_case);
-                    preparedStatement.setString(6, visit_result);
-                    preparedStatement.setString(7, illness_outcome);
-                    preparedStatement.setString(8, codDocter);
-                    preparedStatement.setString(9, codMeds);
-                    preparedStatement.setString(10, forwardMO);
-                    preparedStatement.setDate(11, dateForward);
-                    preparedStatement.setString(12, serPolis);
-                    preparedStatement.setInt(13, idServices);
-
-
-
-                    preparedStatement.executeUpdate();
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                finally {
-                    conn.closeConnection();
-                }
-            }
-        }
 
         System.out.println("Base ready");
     }

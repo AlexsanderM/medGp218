@@ -8,7 +8,7 @@ public enum SqlQuery {
             "serPolis, insuranceName, codMeds, fioMeds, sum, sumError, service, diagnoz, typeDiagnoz, numberService, nameService, kratnost, " +
             "source, operator, error) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"),
     IMPORTSERVICE_NAPR("INSERT INTO Service_napr(dateService, diagnoz, service, service_q, special_case, visit_result, " +
-            "illness_outcome, codDocter, codMeds, forwardMO, forwardDate, serPolis, idServices) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)"),
+            "illness_outcome, codDocter, codMeds, forwardMO, forwardDate, serPolis) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)"),
     ALLUSERS("SELECT * FROM " + Const.USERTABLE),
     SIGNIN("SELECT * FROM " + Const.USERTABLE + " WHERE " + Const.USER_NAME + " =? AND " + Const.USER_PASS + " =?"),
     SEARCHPOLIC("SELECT DISTINCT serPolis, fioPathient, dataBirday, attach, address FROM " + Const.SERVICESTABLE + " WHERE " + Const.SERVICE_SERPOLIC + " like ? LIMIT 20"),
