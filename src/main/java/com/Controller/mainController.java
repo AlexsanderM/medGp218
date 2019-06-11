@@ -205,7 +205,7 @@ public class mainController {
                             serpolisList.add(serpolisNapr);
                             diagnozList.add(diagnozNapr);
                             serviceList.add(serviceNapr);
-                            System.out.println(idList.get(k) + " " + dateList.get(k) + " " + serpolisList.get(k) + " " + diagnozList.get(k) + " " + serviceList.get(k));
+                           // System.out.println(idList.get(k) + " " + dateList.get(k) + " " + serpolisList.get(k) + " " + diagnozList.get(k) + " " + serviceList.get(k));
                         }
 
                     } catch (SQLException e) {
