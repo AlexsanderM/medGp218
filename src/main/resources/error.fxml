@@ -7,10 +7,9 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Controller.errorController">
+<AnchorPane prefHeight="489.0" prefWidth="1240.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.Controller.errorController">
    <children>
-      <TableView fx:id="tableServicesView" layoutY="137.0" prefHeight="352.0" prefWidth="1041.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <TableView fx:id="tableServicesView" layoutY="137.0" prefHeight="352.0" prefWidth="1240.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <columns>
             <TableColumn fx:id="idColumnView" minWidth="0.0" prefWidth="61.0" text="Id" />
             <TableColumn fx:id="dateServiceColumnView" minWidth="0.0" prefWidth="75.0" text="Date" />
@@ -22,7 +21,12 @@
             <TableColumn fx:id="sexColumnView" minWidth="0.0" prefWidth="34.0" text="Sex" />
             <TableColumn fx:id="kratnostColumnView" minWidth="0.0" prefWidth="66.0" text="Kratnost" />
             <TableColumn fx:id="serviceColumnView" minWidth="0.0" prefWidth="68.0" text="Service" />
-            <TableColumn fx:id="commentColumnView" minWidth="0.0" prefWidth="111.0" text="Comment" />
+            <TableColumn fx:id="commentColumnView" minWidth="0.0" prefWidth="87.0" text="Comment" />
+            <TableColumn fx:id="oakColumnView" minWidth="0.0" prefWidth="47.0" text="OAK" />
+            <TableColumn fx:id="callasColumnView" minWidth="0.0" prefWidth="45.0" text="Callas" />
+            <TableColumn fx:id="psaColumnView" minWidth="0.0" prefWidth="51.0" text="PSA" />
+            <TableColumn fx:id="after6ColumnView" minWidth="0.0" prefWidth="82.0" text="after 6" />
+
          </columns>
       </TableView>
       <Button fx:id="buttonOverService" layoutX="440.0" layoutY="24.0" mnemonicParsing="false" onAction="#clickOverService" text="Over Service" />
@@ -31,5 +35,6 @@
       <Label layoutX="201.0" layoutY="28.0" text="-" />
       <Button fx:id="buttonExportExcel" layoutX="904.0" layoutY="99.0" mnemonicParsing="false" onAction="#clickExportEcel" text="Export Excel" />
       <Button fx:id="buttonVDErrorYear" layoutX="545.0" layoutY="24.0" mnemonicParsing="false" onAction="#clickVDErrorYear" text="VD Error Year" />
+      <Button fx:id="buttonCheckVdAll" layoutX="18.0" layoutY="99.0" mnemonicParsing="false" onAction="#clickCheckVdAll" text="check VD All" />
    </children>
 </AnchorPane>

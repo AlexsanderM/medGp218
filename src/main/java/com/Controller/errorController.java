@@ -28,6 +28,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class errorController {
@@ -40,6 +41,9 @@ public class errorController {
 
     @FXML
     private TableColumn<Pathient, Date> dateServiceColumnView;
+
+    @FXML
+    private TableColumn<Pathient, String> addressColumnView;
 
     @FXML
     private TableColumn<Pathient, String> docterColumnView;
@@ -64,8 +68,21 @@ public class errorController {
 
     @FXML
     private TableColumn<Pathient, String> sexColumnView;
+
     @FXML
     private TableColumn<Pathient, String> commentColumnView;
+
+    @FXML
+    private TableColumn<Pathient, String> oakColumnView;
+
+    @FXML
+    private TableColumn<Pathient, String> callasColumnView;
+
+    @FXML
+    private TableColumn<Pathient, String> psaColumnView;
+
+    @FXML
+    private TableColumn<Pathient, String> after6ColumnView;
 
     @FXML
     private Button buttonOverService;
@@ -75,6 +92,10 @@ public class errorController {
 
     @FXML
     private Button buttonVDErrorYear;
+
+    @FXML
+    private Button buttonCheckVdAll;
+
 
     @FXML
     private DatePicker withDatePicker;
@@ -95,6 +116,10 @@ public class errorController {
         kratnostColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("kratnost"));
         serviceColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("service"));
         commentColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("comment"));
+        oakColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("oak"));
+        callasColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("calls"));
+        psaColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("psa"));
+        after6ColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("after 6"));
     }
 
     private ObservableList<Pathient> pathient = FXCollections.observableArrayList();
@@ -337,8 +362,6 @@ public class errorController {
             }
 
 
-
-
             if (serviceList.get(i).intValue() == 1908) {
                 for (int j = 8; j < poYearArray.length; j++) {
                     if (poYearArray[j] == yearBir) {
@@ -350,6 +373,207 @@ public class errorController {
 
             }
         }
+
+        tableServicesView.setItems(pathient);
+        System.out.println("Ready");
+    }
+
+    @FXML
+    void clickCheckVdAll(ActionEvent event) throws SQLException {
+        tableServicesView.getItems().clear();
+
+        idColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, Integer>("id"));
+        dateServiceColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, Date>("dateService"));
+        docterColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("polisPathient"));
+        docterColumnView.setText("Polis");
+        attachColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("address"));
+        attachColumnView.setText("Address");
+        serPolisColumnView1.setCellValueFactory(new PropertyValueFactory<Pathient, String>("vdService"));
+        serPolisColumnView1.setText("VD");
+        fioPathientColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("healthCenterService"));
+        fioPathientColumnView.setText("Health Center");
+        diagnozColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("poService"));
+        diagnozColumnView.setText("po");
+        sexColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("ekgService"));
+        sexColumnView.setText("ekg");
+        kratnostColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("flkService"));
+        kratnostColumnView.setText("flk");
+        serviceColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("mamService"));
+        serviceColumnView.setText("mam");
+        commentColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("smotrService"));
+        commentColumnView.setText("smotr");
+        oakColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("oakService"));
+        oakColumnView.setText("oak");
+        callasColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("callasService"));
+        callasColumnView.setText("callas");
+        psaColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("psaService"));
+        psaColumnView.setText("psa");
+        after6ColumnView.setCellValueFactory(new PropertyValueFactory<Pathient, String>("afterService"));
+        after6ColumnView.setText("after");
+
+        int id = 0;
+
+        ArrayList idList = new ArrayList<Integer>();
+        ArrayList<Date> dateServiceList = new ArrayList<>();
+        ArrayList<String> serPolisList = new ArrayList<>();
+        ArrayList<String> addressList = new ArrayList<>();
+        ArrayList<String> docterList = new ArrayList<>();
+        ArrayList<String> attachList = new ArrayList<>();
+        ArrayList<String> fioPathientList = new ArrayList<>();
+        ArrayList<Date> dataBirPathientList = new ArrayList<>();
+        ArrayList<String> diagnozList = new ArrayList<>();
+        ArrayList<String> sexList = new ArrayList<>();
+        ArrayList<Integer> serviceList = new ArrayList<>();
+        ArrayList<String> kratnostList = new ArrayList<>();
+        ArrayList<String> commentList = new ArrayList<>();
+        ArrayList<Boolean> flagList = new ArrayList<>();
+
+        DbConnect conn = new DbConnect();
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            preparedStatement = conn.getConnection().prepareStatement(Const.SEARCH_SERVIVES_PROV_DISP);
+
+            String withDate = withDatePicker.getValue().toString();
+
+            preparedStatement.setString(1, withDate);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                id++;
+                //idList.add(id);
+
+                dateServiceList.add(resultSet.getDate(Const.SERVICE_DATE));
+                serPolisList.add(resultSet.getString(Const.SERVICE_SERPOLIC));
+                addressList.add(resultSet.getString(Const.SERVICE_ADDRESS));
+
+
+                docterList.add(resultSet.getString(Const.SERVICE_FIO_DOCTOR));
+                attachList.add(resultSet.getString(Const.SERVICE_ATTACH));
+                fioPathientList.add(resultSet.getString(Const.SERVICE_FIOPATHIENT));
+                dataBirPathientList.add(resultSet.getDate(Const.SERVICE_BIRTHPATHIENT));
+                diagnozList.add(resultSet.getString(Const.SERVICE_DIAGNOZ));
+                sexList.add(resultSet.getString(Const.SERVICE_SEX));
+                serviceList.add(resultSet.getInt(Const.SERVICE_SERVICE));
+                kratnostList.add(resultSet.getString(Const.SERVICE_KRATNOST));
+                flagList.add(true);
+                commentList.add("");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            resultSet.close();
+            preparedStatement.close();
+            conn.closeConnection();
+        }
+
+        conn = new DbConnect();
+        preparedStatement = null;
+        resultSet = null;
+
+        try {
+            preparedStatement = conn.getConnection().prepareStatement(Const.SEARCH_SERVIVES_AFTER);
+
+            String withDate = withDatePicker.getValue().toString();
+
+            preparedStatement.setString(1, withDate);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                id++;
+                //idList.add(id);
+
+                dateServiceList.add(resultSet.getDate(Const.SERVICE_DATE));
+                serPolisList.add(resultSet.getString(Const.SERVICE_SERPOLIC));
+                addressList.add(resultSet.getString(Const.SERVICE_ADDRESS));
+                docterList.add(resultSet.getString(Const.SERVICE_FIO_DOCTOR));
+                attachList.add(resultSet.getString(Const.SERVICE_ATTACH));
+                fioPathientList.add(resultSet.getString(Const.SERVICE_FIOPATHIENT));
+                dataBirPathientList.add(resultSet.getDate(Const.SERVICE_BIRTHPATHIENT));
+                diagnozList.add(resultSet.getString(Const.SERVICE_DIAGNOZ));
+                sexList.add(resultSet.getString(Const.SERVICE_SEX));
+                serviceList.add(resultSet.getInt(Const.SERVICE_SERVICE));
+                kratnostList.add(resultSet.getString(Const.SERVICE_KRATNOST));
+                flagList.add(true);
+                commentList.add("");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            resultSet.close();
+            preparedStatement.close();
+            conn.closeConnection();
+        }
+
+        int lengthRows = dateServiceList.size();
+
+        LocalDate dateService;
+        LocalDate datePicker;
+        int servicePathient;
+        String serPolis;
+
+
+        for (int i = 0; i < lengthRows; i++) {
+
+            dateService = dateServiceList.get(i).toLocalDate();
+            datePicker = withDatePicker.getValue();
+            servicePathient = serviceList.get(i);
+            serPolis = serPolisList.get(i);
+
+            if (dateService.equals(datePicker) && servicePathient == 101101) {
+                String vdService = "";
+                String healthCenterService = "";
+                String poService = "";
+                String ekgService = "";
+                String flkService = "";
+                String mamService = "";
+                String smotrService = "";
+                String oakService = "";
+                String callasService = "";
+                String psaService = "";
+                String afterService = "";
+
+                for (int y = 0; y < lengthRows; y++) {
+                    if (serPolis.equals(serPolisList.get(y))) {
+                        System.out.println(serviceList.get(y));
+                        if (serviceList.get(y) >= 1910 && serviceList.get(y) <= 1920)
+                            vdService = dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) == 15001)
+                            healthCenterService = dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) >= 1900 && serviceList.get(y) <= 1909)
+                            poService = dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) == 22106)
+                            ekgService += " " + dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) == 35211)
+                            flkService += " " + dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) == 35401 || serviceList.get(y) == 35408)
+                            mamService += " " + dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) == 1441 || serviceList.get(y) == 2012 || serviceList.get(y) == 2013)
+                            smotrService += " " + dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) >= 25063 && serviceList.get(y) <= 25065)
+                            oakService += " " + dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) == 25204)
+                            callasService += " " + dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (serviceList.get(y) == 28077)
+                            psaService += " " + dateServiceList.get(y) + " " + serviceList.get(y);
+                        if (dateServiceList.get(y).toLocalDate().isAfter(datePicker) || dateServiceList.get(y).toLocalDate().equals(datePicker)) {
+                            afterService += " " + dateServiceList.get(y) + " " + serviceList.get(y);
+                        }
+
+                    }
+                }
+
+                pathient.add(new Pathient(id, dateServiceList.get(i), serPolisList.get(i), addressList.get(i),
+                        vdService, healthCenterService, poService, ekgService, flkService, mamService, smotrService,oakService,
+                        callasService, psaService, afterService));
+            }
+
+
+        }
+
 
         tableServicesView.setItems(pathient);
         System.out.println("Ready");
@@ -372,23 +596,31 @@ public class errorController {
             cell = row.createCell(1, CellType.STRING);
             cell.setCellValue("Date:");
             cell = row.createCell(2, CellType.STRING);
-            cell.setCellValue("Docter");
+            cell.setCellValue(tableServicesView.getColumns().get(2).getText());
             cell = row.createCell(3, CellType.STRING);
-            cell.setCellValue("Attach");
+            cell.setCellValue(tableServicesView.getColumns().get(3).getText());
             cell = row.createCell(4, CellType.STRING);
-            cell.setCellValue("SerPolis");
+            cell.setCellValue(tableServicesView.getColumns().get(4).getText());
             cell = row.createCell(5, CellType.STRING);
-            cell.setCellValue("FioPathient");
+            cell.setCellValue(tableServicesView.getColumns().get(5).getText());
             cell = row.createCell(6, CellType.STRING);
-            cell.setCellValue("Diagnoz");
+            cell.setCellValue(tableServicesView.getColumns().get(6).getText());
             cell = row.createCell(7, CellType.STRING);
-            cell.setCellValue("Sex");
+            cell.setCellValue(tableServicesView.getColumns().get(7).getText());
             cell = row.createCell(8, CellType.STRING);
-            cell.setCellValue("Kratnost");
+            cell.setCellValue(tableServicesView.getColumns().get(8).getText());
             cell = row.createCell(9, CellType.STRING);
-            cell.setCellValue("Service");
+            cell.setCellValue(tableServicesView.getColumns().get(9).getText());
             cell = row.createCell(10, CellType.STRING);
-            cell.setCellValue("Comment");
+            cell.setCellValue(tableServicesView.getColumns().get(10).getText());
+            cell = row.createCell(11, CellType.STRING);
+            cell.setCellValue(tableServicesView.getColumns().get(11).getText());
+            cell = row.createCell(12, CellType.STRING);
+            cell.setCellValue(tableServicesView.getColumns().get(12).getText());
+            cell = row.createCell(13, CellType.STRING);
+            cell.setCellValue(tableServicesView.getColumns().get(13).getText());
+            cell = row.createCell(14, CellType.STRING);
+            cell.setCellValue(tableServicesView.getColumns().get(14).getText());
 
             for (int i = 0; i < tableServicesView.getItems().size(); i++) {
                 rowSize++;
@@ -399,25 +631,82 @@ public class errorController {
                 cell = row.createCell(1, CellType.NUMERIC);
                 cell.setCellValue(tableServicesView.getItems().get(i).getDateService());
                 cell = row.createCell(2, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getFioDocter());
-                cell = row.createCell(3, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getAttach());
-                cell = row.createCell(4, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getPolisPathient());
-                cell = row.createCell(5, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getFioPathient());
-                cell = row.createCell(6, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getDiagnoz());
-                cell = row.createCell(7, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getSex());
-                cell = row.createCell(8, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getKratnost());
-                cell = row.createCell(9, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getService());
-                cell = row.createCell(10, CellType.STRING);
-                cell.setCellValue(tableServicesView.getItems().get(i).getComment());
-            }
 
+                if (tableServicesView.getColumns().get(2).getText().equals("fioDocter")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getFioDocter());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getPolisPathient());
+                }
+
+                cell = row.createCell(3, CellType.STRING);
+                if (tableServicesView.getColumns().get(3).getText().equals("attach")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getAttach());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getAddress());
+                }
+
+                cell = row.createCell(4, CellType.STRING);
+                if (tableServicesView.getColumns().get(4).getText().equals("polisPathient")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getPolisPathient());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getVdService());
+                }
+
+                cell = row.createCell(5, CellType.STRING);
+                if (tableServicesView.getColumns().get(5).getText().equals("fioPathient")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getFioPathient());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getHealthCenterService());
+                }
+
+
+                cell = row.createCell(6, CellType.STRING);
+                if (tableServicesView.getColumns().get(6).getText().equals("diagnoz")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getDiagnoz());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getPoService());
+                }
+
+                cell = row.createCell(7, CellType.STRING);
+                if (tableServicesView.getColumns().get(7).getText().equals("sex")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getSex());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getEkgService());
+                }
+
+                cell = row.createCell(8, CellType.STRING);
+                if (tableServicesView.getColumns().get(8).getText().equals("kratnost")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getKratnost());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getFlkService());
+                }
+
+                cell = row.createCell(9, CellType.STRING);
+                if (tableServicesView.getColumns().get(9).getText().equals("service")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getService());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getMamService());
+                }
+
+                cell = row.createCell(10, CellType.STRING);
+                if (tableServicesView.getColumns().get(10).getText().equals("comment")) {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getComment());
+                } else {
+                    cell.setCellValue(tableServicesView.getItems().get(i).getSmotrService());
+                }
+
+                cell = row.createCell(11, CellType.STRING);
+                cell.setCellValue(tableServicesView.getItems().get(i).getOakService());
+
+                cell = row.createCell(12, CellType.STRING);
+                cell.setCellValue(tableServicesView.getItems().get(i).getCallasService());
+
+                cell = row.createCell(13, CellType.STRING);
+                cell.setCellValue(tableServicesView.getItems().get(i).getPsaService());
+
+                cell = row.createCell(14, CellType.STRING);
+                cell.setCellValue(tableServicesView.getItems().get(i).getAfterService());
+            }
             FileOutputStream outFile = new FileOutputStream("C:/Отчеты/превышение кратности_" + 1 + ".xls");
             workbook.write(outFile);
             System.out.println("Created file: ");
